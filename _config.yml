@@ -1,0 +1,18 @@
+# The public changelog's site (GitHub Pages, Jekyll). Seeded from
+# vaalbara's scripts/release/notes/site/ by `release:notes --init-site`;
+# the entries under changelog/ are written by the release ceremony and
+# never edited here.
+title: Subduction changelog
+description: What changed in each release of Subduction.
+markdown: kramdown
+kramdown:
+  # Every entry has its own New / Improved / Fixed headings; ids on
+  # them would collide across the index. The version is the anchor.
+  auto_ids: false
+exclude:
+  - README.md
+defaults:
+  - scope:
+      path: changelog
+    values:
+      layout: entry
