@@ -1,0 +1,12 @@
+{% assign e = include.entry %}
+<article class="entry" id="{{ e.version }}">
+  <h2><a href="{{ '/' | relative_url }}#{{ e.version }}">{{ e.version }}</a></h2>
+  <p class="meta">
+    <time datetime="{{ e.date | date: '%Y-%m-%d' }}">{{ e.date | date: "%B %-d, %Y" }}</time>
+    · Shipped
+    {%- if e.targets contains "suite" %} on the web{% endif -%}
+    {%- if e.targets contains "suite" and e.targets contains "desktop" %} and{% endif -%}
+    {%- if e.targets contains "desktop" %} in Subduction for desktop{% endif -%}
+  </p>
+  {{ e.content | markdownify }}
+</article>
