@@ -1,0 +1,18 @@
+---
+layout: default
+---
+<h1>What's new in Subduction</h1>
+<p class="lede">Every release, newest first.</p>
+{% assign entries = site.pages | where_exp: "p", "p.dir == '/changelog/'" | sort: "order" | reverse %}
+{% comment %} Six months of releases stay open; older ones fold. {% endcomment %}
+{% assign fold = site.time | date: "%s" | minus: 15724800 %}
+{% assign folded = false %}
+{% for entry in entries %}
+  {% assign at = entry.date | date: "%s" | plus: 0 %}
+  {% if at < fold and folded == false %}
+    {% assign folded = true %}
+<details class="older"><summary>Older releases</summary>
+  {% endif %}
+  {% include entry.html entry=entry %}
+{% endfor %}
+{% if folded %}</details>{% endif %}
