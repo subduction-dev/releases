@@ -1,0 +1,8 @@
+{%- comment -%}
+  The platforms an entry shipped on, as neutral tags, web first. The
+  words are specs/vocabulary.md's two platform rows.
+{%- endcomment -%}
+<div class="tags">
+  {%- if include.targets contains "suite" %}<span class="tag">on the web</span>{% endif -%}
+  {%- if include.targets contains "desktop" %}<span class="tag">Subduction for desktop</span>{% endif -%}
+</div>

@@ -1,0 +1,454 @@
+/* The public changelog's one stylesheet.
+ *
+ * The design of record is vaalbara's root
+ * specs/product_surface_designs/ (Changelog Mockup, Changelog
+ * Boards), drawn on the savanna family. This page cannot import the
+ * app's stylesheet, so the family tokens it uses are copied here from
+ * mantle/packages/ui/src/theme/families/savanna.css — that file is
+ * the authority; re-copy rather than hand-tune. Dark is the family's
+ * default identity; light follows prefers-color-scheme. */
+
+@font-face {
+  font-family: "Coustard";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("fonts/coustard-latin-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/ibm-plex-sans-latin-400-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Sono";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("fonts/sono-latin-400-600.woff2") format("woff2");
+}
+
+/* ── savanna, dark (the family default) ── */
+:root {
+  color-scheme: dark;
+  --sv-hue: 30;
+  --sv-s: 38%;
+  --sv-l: 10%;
+  --sv-base: hsla(var(--sv-hue), var(--sv-s), var(--sv-l), 0.99);
+  --sv-bg: hsla(var(--sv-hue), 14%, 5.5%, 0.99);
+  --sv-c5: rgba(255, 255, 255, 0.05);
+  --sv-c10: rgba(255, 255, 255, 0.1);
+  --sv-link: hsla(calc(var(--sv-hue) + 175), 50%, 64%, 0.99);
+  --sv-shadow: 0.55;
+
+  --background: var(--sv-bg);
+  --card: var(--sv-c5);
+  --hover: rgba(255, 255, 255, 0.04);
+  --border-hairline: rgba(255, 255, 255, 0.07);
+  --border: var(--sv-c10);
+  --foreground: oklch(from var(--sv-base) 0.97 0.005 h);
+  --foreground-body: oklch(from var(--sv-base) 0.92 0.008 h);
+  --secondary-fg: oklch(from var(--sv-base) 0.88 0.01 h);
+  --muted-foreground: oklch(from var(--sv-base) 0.75 0.015 h);
+  --faint: oklch(from var(--sv-base) 0.58 0.012 h);
+  --mono-meta: oklch(from var(--sv-base) 0.65 0.015 h);
+  --link: var(--sv-link);
+  --shadow-card: 0 5px 16px -9px rgba(0, 0, 0, var(--sv-shadow));
+  --focus-ring: rgba(255, 255, 255, 0.4);
+  --selection: hsla(8, 50%, 70%, 0.35);
+
+  /* The design's two local names. Dark keeps the family's values. */
+  --meta: var(--muted-foreground);
+  --eyebrow: var(--mono-meta);
+
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: "Coustard", Georgia, serif;
+  --font-mono: "Sono", ui-monospace, monospace;
+  --radius-chip: 5px;
+  --radius: 7px;
+  --radius-card: 11px;
+  --measure-narrow: 720px;
+  --measure-prose: 72ch;
+}
+
+/* ── savanna-light ── */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --sv-bg: hsla(var(--sv-hue), 10%, 98%, 0.99);
+    --sv-c5: hsla(var(--sv-hue), 30%, 10%, 0.05);
+    --sv-c10: hsla(var(--sv-hue), 30%, 10%, 0.1);
+    --sv-link: hsla(calc(var(--sv-hue) + 175), 42%, 42%, 0.99);
+    --sv-shadow: 0.14;
+
+    --card: #fff;
+    --hover: hsla(var(--sv-hue), 30%, 10%, 0.04);
+    --border-hairline: hsla(var(--sv-hue), 30%, 10%, 0.07);
+    --foreground: oklch(from var(--sv-base) 0.333 0.005 h);
+    --foreground-body: oklch(from var(--sv-base) 0.4 0.01 h);
+    --secondary-fg: oklch(from var(--sv-base) 0.5 0.025 h);
+    --muted-foreground: oklch(from var(--sv-base) 0.62 0.02 h);
+    --faint: oklch(from var(--sv-base) 0.72 0.015 h);
+    --mono-meta: oklch(from var(--sv-base) 0.62 0.02 h);
+    --focus-ring: hsla(var(--sv-hue), 30%, 10%, 0.4);
+
+    /* Darker than the family's meta on paper: the family values fall
+       to about 3:1 at 11–13px (the design's hand-off). */
+    --meta: var(--secondary-fg);
+    --eyebrow: var(--secondary-fg);
+  }
+}
+
+/* ── base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  background: var(--background);
+}
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+::selection {
+  background: var(--selection);
+}
+a {
+  color: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-chip);
+}
+
+.column {
+  container-type: inline-size;
+  max-width: calc(var(--measure-narrow) + 32px);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ── the top bar ── */
+.topbar {
+  background: var(--background);
+  border-bottom: 1px solid var(--border-hairline);
+}
+.topbar .column {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbar img {
+  display: block;
+}
+.brand {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--foreground);
+  text-decoration: none;
+}
+.crumb-sep {
+  color: var(--faint);
+  font-size: 15px;
+}
+.crumb {
+  font-size: 15px;
+  color: var(--meta);
+  text-decoration: none;
+}
+.crumb:hover {
+  color: var(--foreground);
+}
+
+/* ── shared voices ── */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+}
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── the masthead ── */
+.masthead {
+  padding-top: 64px;
+  padding-bottom: 44px;
+}
+.masthead h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(30px, 7cqi, 44px);
+  line-height: 1.15;
+  margin: 14px 0 0;
+  color: var(--foreground);
+  text-wrap: balance;
+}
+.masthead .lede {
+  font-size: 17px;
+  line-height: 1.5;
+  margin: 14px 0 0;
+  color: var(--meta);
+}
+.list {
+  padding-bottom: 96px;
+}
+
+/* ── one entry: a rail and a body that wrap without a breakpoint ── */
+.entry {
+  border-top: 1px solid var(--border-hairline);
+  padding: 32px 0 36px;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 32px;
+  row-gap: 16px;
+  scroll-margin-top: 28px;
+}
+/* Arriving at /#<version>: the entry lifts onto a card, pulled outward
+   so its text stays on the column's grid. Nothing marks a version as
+   the reader's own — the site cannot know which one they run. */
+.entry:target {
+  margin: 4px calc(min(24px, 3cqi) * -1) 20px;
+  padding: 22px min(24px, 3cqi) 28px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+.entry-rail {
+  flex: 1 1 148px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: baseline;
+  column-gap: 14px;
+  row-gap: 6px;
+}
+.entry-version {
+  flex: 0 0 100%;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--foreground);
+  text-decoration: none;
+}
+.entry-version:hover {
+  text-decoration: underline;
+}
+.entry-date {
+  font-size: 12.5px;
+  color: var(--meta);
+}
+
+/* The platform tags: neutral, always on their own line. */
+.tags {
+  flex: 0 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag {
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 7px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-chip);
+  color: var(--meta);
+}
+
+/* The body is plain markdown: h3 groups, ul > li bullets, and a p for
+   the one-line "Internal improvements." entry. */
+.entry-body {
+  flex: 999 1 360px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--foreground-body);
+}
+.entry-body h3 {
+  margin: 14px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+}
+.entry-body h3:first-child {
+  margin-top: 0;
+}
+.entry-body ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.entry-body li,
+.entry-body p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+/* The dash sits outside the text's flow, so inline markdown (**bold**,
+   _emphasis_) keeps flowing as one sentence: 8px of dash, then the
+   design's 12px gap. 0.8em is the design's 13px at 16px and 14px at
+   the entry page's 17px. */
+.entry-body li {
+  position: relative;
+  padding-left: 20px;
+}
+.entry-body li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.8em;
+  width: 8px;
+  height: 1.5px;
+  background: var(--faint);
+}
+
+/* ── the fold: entries older than six months ── */
+.older {
+  border-top: 1px solid var(--border-hairline);
+  border-bottom: 1px solid var(--border-hairline);
+  padding: 6px 0;
+}
+.older summary {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 12px;
+  row-gap: 2px;
+  padding: 12px;
+  margin: 0 -12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.older summary::-webkit-details-marker {
+  display: none;
+}
+.older summary:hover {
+  background: var(--hover);
+}
+.older .caret {
+  font-size: 12px;
+  color: var(--faint);
+  width: 10px;
+  transition: transform 120ms ease;
+}
+.older[open] .caret {
+  transform: rotate(90deg);
+}
+.older .fold-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.older .fold-count {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--meta);
+}
+
+/* ── an entry's own page ── */
+.entry-page {
+  padding-top: 40px;
+  padding-bottom: 96px;
+}
+.back {
+  font-size: 12.5px;
+  color: var(--link);
+  text-decoration: none;
+}
+.back:hover {
+  text-decoration: underline;
+}
+.entry-page > .eyebrow {
+  margin-top: 40px;
+}
+.entry-page h1 {
+  margin: 12px 0 0;
+  font-weight: 600;
+  font-size: clamp(30px, 7cqi, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+.entry-page-meta {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 16px;
+  row-gap: 6px;
+}
+.entry-page-meta .entry-date {
+  font-size: 13px;
+}
+.entry-page .entry-body {
+  margin-top: 36px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border-hairline);
+  max-width: var(--measure-prose);
+  gap: 12px;
+}
+.entry-page .entry-body h3 {
+  margin-top: 16px;
+}
+.entry-page .entry-body h3:first-child {
+  margin-top: 0;
+}
+.entry-page .entry-body ul {
+  gap: 12px;
+}
+.entry-page .entry-body li,
+.entry-page .entry-body p {
+  font-size: 17px;
+}
+.neighbours {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.neighbour {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  text-decoration: none;
+}
+.neighbour:hover {
+  background: var(--hover);
+}
+.neighbour.newer {
+  align-items: flex-end;
+  text-align: right;
+}
+.neighbour-version {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+.neighbour-date {
+  font-size: 12.5px;
+  color: var(--meta);
+}

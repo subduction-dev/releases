@@ -1,18 +1,39 @@
 ---
 layout: default
 ---
-<h1>What's new in Subduction</h1>
-<p class="lede">Every release, newest first.</p>
-{% assign entries = site.pages | where_exp: "p", "p.dir == '/changelog/'" | sort: "order" | reverse %}
-{% comment %} Six months of releases stay open; older ones fold. {% endcomment %}
-{% assign fold = site.time | date: "%s" | minus: 15724800 %}
-{% assign folded = false %}
-{% for entry in entries %}
-  {% assign at = entry.date | date: "%s" | plus: 0 %}
-  {% if at < fold and folded == false %}
-    {% assign folded = true %}
-<details class="older"><summary>Older releases</summary>
-  {% endif %}
+<div class="column masthead">
+  <div class="eyebrow">Changelog</div>
+  <h1>What's new in Subduction</h1>
+  <p class="lede">Every release, newest first.</p>
+</div>
+{%- assign entries = site.pages | where_exp: "p", "p.dir == '/changelog/'" | sort: "order" | reverse -%}
+{%- comment -%} Six months of releases stay open; older ones fold. {%- endcomment -%}
+{%- assign fold = site.time | date: "%s" | minus: 15724800 -%}
+{%- assign older = 0 -%}
+{%- for entry in entries -%}
+  {%- assign at = entry.date | date: "%s" | plus: 0 -%}
+  {%- if at < fold %}{% assign older = older | plus: 1 %}{% endif -%}
+{%- endfor %}
+<div class="column list">
+  {%- for entry in entries -%}
+    {%- assign at = entry.date | date: "%s" | plus: 0 -%}
+    {%- if at >= fold %}
   {% include entry.html entry=entry %}
-{% endfor %}
-{% if folded %}</details>{% endif %}
+    {%- endif -%}
+  {%- endfor %}
+  {%- if older > 0 %}
+  <details class="older">
+    <summary>
+      <span class="caret" aria-hidden="true">▸</span>
+      <span class="fold-title">Older releases</span>
+      <span class="fold-count mono">{{ older }} release{% if older != 1 %}s{% endif %} · before {{ fold | date: "%b %-d, %Y" }}</span>
+    </summary>
+    {%- for entry in entries -%}
+      {%- assign at = entry.date | date: "%s" | plus: 0 -%}
+      {%- if at < fold %}
+    {% include entry.html entry=entry %}
+      {%- endif -%}
+    {%- endfor %}
+  </details>
+  {%- endif %}
+</div>

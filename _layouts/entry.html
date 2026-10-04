@@ -1,5 +1,39 @@
 ---
 layout: default
 ---
-{% include entry.html entry=page %}
-<p class="back"><a href="{{ '/' | relative_url }}#{{ page.version }}">Every release</a></p>
+{%- assign entries = site.pages | where_exp: "p", "p.dir == '/changelog/'" | sort: "order" -%}
+{%- for e in entries -%}
+  {%- if e.version == page.version %}{% assign at = forloop.index0 %}{% endif -%}
+{%- endfor -%}
+{%- assign earlier = nil -%}
+{%- if at > 0 %}{% assign earlier_at = at | minus: 1 %}{% assign earlier = entries[earlier_at] %}{% endif -%}
+{%- assign newer_at = at | plus: 1 -%}
+{%- assign newer = entries[newer_at] -%}
+<div class="column entry-page">
+  <a class="back mono" href="{{ '/' | relative_url }}#{{ page.version }}">← Every release</a>
+  <div class="eyebrow">Subduction release</div>
+  <h1 class="mono">{{ page.version }}</h1>
+  <div class="entry-page-meta">
+    <time class="entry-date mono" datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: "%b %-d, %Y" }}</time>
+    {% include tags.html targets=page.targets %}
+  </div>
+  <div class="entry-body">{{ content }}</div>
+  {%- if earlier or newer %}
+  <nav class="neighbours" aria-label="Other releases">
+    {%- if earlier %}
+    <a class="neighbour earlier" href="{{ earlier.url | relative_url }}">
+      <span class="eyebrow">← Earlier</span>
+      <span class="neighbour-version mono">{{ earlier.version }}</span>
+      <span class="neighbour-date mono">{{ earlier.date | date: "%b %-d, %Y" }}</span>
+    </a>
+    {%- endif %}
+    {%- if newer %}
+    <a class="neighbour newer" href="{{ newer.url | relative_url }}">
+      <span class="eyebrow">Newer →</span>
+      <span class="neighbour-version mono">{{ newer.version }}</span>
+      <span class="neighbour-date mono">{{ newer.date | date: "%b %-d, %Y" }}</span>
+    </a>
+    {%- endif %}
+  </nav>
+  {%- endif %}
+</div>
