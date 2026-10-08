@@ -5,7 +5,7 @@
       "version": "suite-v2026.10.5",
       "digest": "sha256:166a0426119bd0df533bdda640242e3aad3714a68e80539ebabd5cae33e70dc4",
       "promoted": "2026-10-08T17:04:08.000Z",
-      "forced": false,
+      "forced": true,
       "withdrawn": null,
       "renderer": 1,
       "notes": "https://releases.subd.app/#2026.10.5"
