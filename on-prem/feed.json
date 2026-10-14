@@ -2,6 +2,16 @@
   "schema": 1,
   "versions": [
     {
+      "version": "suite-v2026.10.12",
+      "digest": "sha256:ea8edb9f650b23d3ee4b2f936fc2bc7d53578fb44f9a3f6a657bf386d70c60e4",
+      "promoted": "2026-10-14T17:47:35.000Z",
+      "forced": true,
+      "withdrawn": null,
+      "renderer": 1,
+      "notes": "https://releases.subd.app/#2026.10.12",
+      "subd": "subd-v2026.10.12"
+    },
+    {
       "version": "suite-v2026.10.11",
       "digest": "sha256:dc9278437a635a365c17b1d8c3dba64949fcf49433624f51901c04df1bfc24c8",
       "promoted": "2026-10-13T21:10:26.000Z",
