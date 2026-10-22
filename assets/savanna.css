@@ -1,0 +1,261 @@
+/* =============================================================================
+   savanna — the open, warm theme family (specs/ui.md, Theming)
+   -----------------------------------------------------------------------------
+   The roomier language Cascade's product surface proved, generalized: one
+   base hue drives everything — the contrast ramp is a translucent overlay
+   ramp, the emphasis accent sits 14° warm of the hue, the link 175° across,
+   status colors mix toward the base. The faces are the family's own voice
+   (Coustard / IBM Plex Sans / Sono, shipped by theme/fonts-savanna.css);
+   without that import the stacks fall to system faces.
+
+   Primitives (--sv-*) are family-private: components never reference them
+   (specs/ui.md, theme-authoring rules). Dark is the default; light is the
+   [data-mode="light"] block.
+
+   Savanna is also the unbranded default: a document with no data-family
+   resolves here, so an undeclared document is themed rather than bare.
+   It inherited that role from tundra at tundra's retirement
+   (2026-08-28); the role belongs to whichever family the suite defaults
+   to, not to savanna forever. Only the DESCENDANT ::selection form is
+   mirrored below — the bare-root selector is always <html>, whose own
+   ::selection matches nothing.
+   ============================================================================= */
+
+:root:not([data-family]),
+[data-family="savanna"] {
+  color-scheme: dark;
+
+  /* ======================= primitives (brand-tunable) ==================== */
+
+  --sv-hue: 30;
+  --sv-s: 38%;
+  --sv-l: 10%;
+  --sv-base: hsla(var(--sv-hue), var(--sv-s), var(--sv-l), 0.99);
+
+  /* Surfaces: near-black page, darker desk. Low saturation on purpose —
+     a warm hue at higher S/L reads brown. */
+  --sv-bg:   hsla(var(--sv-hue), 14%, 5.5%, 0.99);
+  --sv-desk: hsla(var(--sv-hue), 14%, 3.5%, 0.99);
+
+  /* Contrast ramp: white at fixed alphas (ink-alpha in light mode). */
+  --sv-c5:  rgba(255, 255, 255, 0.05);
+  --sv-c10: rgba(255, 255, 255, 0.1);
+  --sv-c20: rgba(255, 255, 255, 0.2);
+  --sv-c40: rgba(255, 255, 255, 0.4);
+  --sv-c60: rgba(255, 255, 255, 0.6);
+  --sv-c80: rgba(255, 255, 255, 0.8);
+
+  --sv-accent: hsla(calc(var(--sv-hue) - 14), 66%, 60%, 0.99);
+  --sv-link:   hsla(calc(var(--sv-hue) + 175), 50%, 64%, 0.99);
+  --sv-shadow: 0.55;
+
+  /* ======================= the semantic contract ========================= */
+
+  /* ---- Surfaces ---- */
+  --canvas:       var(--sv-desk);
+  --background:   var(--sv-bg);
+  --sidebar:      var(--sv-bg);   /* no distinct sidebar surface — presence, not structure */
+  --card:         var(--sv-c5);   /* the translucent white lift */
+  --popover:      color-mix(in srgb, var(--sv-bg) 93%, white); /* floating layers must be opaque */
+  --code-surface: color-mix(in srgb, var(--sv-bg) 70%, var(--sv-desk));
+
+  /* ---- Fills ---- */
+  --fill-subtle: rgba(255, 255, 255, 0.03);
+  --fill:        var(--sv-c5);
+  --hover:       rgba(255, 255, 255, 0.04);
+  --active:      rgba(255, 255, 255, 0.08);
+
+  /* ---- Borders ---- */
+  --border-hairline: rgba(255, 255, 255, 0.07);
+  --border:          var(--sv-c10);
+  --border-strong:   var(--sv-c20);
+  --input:           var(--sv-c20);
+  --ring:            var(--sv-c40);
+
+  /* ---- Text ramp (hue-derived; the family collapses adjacent steps the
+     three-step source ramp never distinguished — legal per the spec) ---- */
+  --foreground:        oklch(from var(--sv-base) 0.97 0.005 h);
+  --foreground-body:   oklch(from var(--sv-base) 0.92 0.008 h);
+  --secondary-fg:      oklch(from var(--sv-base) 0.88 0.01 h);
+  --muted-foreground:  oklch(from var(--sv-base) 0.75 0.015 h);
+  --muted-foreground-2:oklch(from var(--sv-base) 0.68 0.015 h);
+  --faint:             oklch(from var(--sv-base) 0.58 0.012 h);
+  --faintest:          oklch(from var(--sv-base) 0.48 0.01 h);
+  --mono-meta:         oklch(from var(--sv-base) 0.65 0.015 h);
+
+  /* ---- Primary action (the c80 button on the page surface) ---- */
+  --primary:            var(--sv-c80);
+  --primary-foreground: var(--sv-bg);
+
+  /* ---- Emphasis accent and link — savanna lets one warm accent reach
+     calls-to-action and attention marks. The accent ink is the source
+     surface's exact authored value. ---- */
+  --accent:            var(--sv-accent);
+  --accent-foreground: #3a1512;
+  --link:              var(--sv-link);
+
+  /* ---- Identity accent (avatars / presence only). Lifted from #6b4fd6
+     (2026-09-10, Terrane's Q3 return): the old value failed 4.5:1 at
+     meta size on both grounds, everywhere it appeared — not only in the
+     document that surfaced it. The light block sets its own. ---- */
+  --accent-identity: #a693f0;
+
+  /* ---- Status ---- */
+  --success:            color-mix(in lch, var(--sv-base) 15%, hsl(85, 85%, 30%) 85%);
+  --success-foreground: color-mix(in oklch, var(--success) 55%, white);
+  --success-soft:       color-mix(in oklch, var(--success) 40%, white);
+  --success-surface:    color-mix(in lch, var(--sv-base) 80%, var(--success) 42%);
+  --success-glow:       color-mix(in srgb, var(--success) 55%, transparent);
+
+  --warning:            color-mix(in lch, var(--sv-base) 5%, hsl(43, 80%, 46%) 85%);
+  --warning-foreground: color-mix(in oklch, var(--warning) 52%, white);
+  --warning-surface:    color-mix(in lch, var(--sv-base) 80%, var(--warning) 42%);
+
+  --info: hsla(212, 55%, 73%, 0.99);
+
+  --destructive:            color-mix(in lch, var(--sv-base) 15%, hsl(6, 80%, 38%) 90%);
+  --destructive-foreground: color-mix(in oklch, var(--destructive) 42%, white);
+  --destructive-surface:    color-mix(in lch, var(--sv-base) 76%, var(--destructive) 46%);
+
+  /* ---- Syntax highlighting (low-chroma, harmonized to the hue) ---- */
+  --code-plain:   var(--secondary-fg);
+  --code-keyword: hsla(calc(var(--sv-hue) + 185), 35%, 68%, 0.99);
+  --code-string:  var(--success-soft);
+  --code-ambient: hsla(calc(var(--sv-hue) + 10), 40%, 65%, 0.99);
+  --code-comment: var(--faint);
+  --code-gutter:  var(--faintest);
+
+  /* ---- Radius scale ---- */
+  --radius-chip:    5px;
+  --radius:         7px;
+  --radius-control: var(--radius);
+  --radius-card:    11px;
+  --radius-frame:   14px;
+
+  /* ---- Elevation (alpha rides the per-mode shadow scalar) ---- */
+  --shadow-card:  0 5px 16px -9px rgba(0, 0, 0, var(--sv-shadow));
+  --shadow-frame: 0 40px 90px -32px rgba(0, 0, 0, calc(var(--sv-shadow) * 1.5));
+  --shadow-modal: 0 36px 90px -28px rgba(0, 0, 0, calc(var(--sv-shadow) * 1.6));
+  --shadow-popup: 0 14px 34px -12px rgba(0, 0, 0, calc(var(--sv-shadow) * 1.5));
+
+  /* ---- Focus, layers, selection ---- */
+  --focus-ring: rgba(255, 255, 255, 0.4);
+  --overlay:    rgba(10, 8, 6, 0.6);
+  --selection:  hsla(8, 50%, 70%, 0.35);
+
+  /* ---- StatusDot ---- */
+  --dot-hollow-border: var(--sv-c40);
+  --dot-muted:         var(--sv-c20);
+
+  /* ---- Type stacks — the family's voice (faces live in the fonts
+     entry, never here) ---- */
+  --font-sans:    "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: "Coustard", Georgia, serif;
+  --font-mono:    "Sono", ui-monospace, monospace;
+
+  /* ---- The type ramp — roomy, with real leading ---- */
+  --type-title:        24px;   --type-title-lh:     1.3;
+  --type-section:      16px;   --type-section-lh:   1.35;
+  --type-row:          15px;   --type-row-lh:       1.45;
+  --type-body:         13.5px; --type-body-lh:      1.55;
+  --type-meta:         13px;   --type-meta-lh:      1.5;
+  --type-mono-meta:    11.5px; --type-mono-meta-lh: 1.5;
+  --type-micro:        11px;   --type-micro-lh:     1.45;
+  --tracking-eyebrow:  0.12em;
+
+  /* ---- Control geometry (the 34px controls the source surface used) ---- */
+  --control-h:    34px;
+  --control-h-sm: 28px;
+  --control-px:   15px;
+  --control-px-sm:13px;
+  --field-px:     12px;
+  --field-py:     8px;
+
+  /* ---- Content measures (specs/ui.md, The Content Measures) ---- */
+  --measure-narrow: 720px; /* the centred column — content that is a column */
+  --measure-prose:  72ch;  /* the reading measure, in the text's own size */
+
+  /* ---- Component tier ---- */
+  --radius-popover:        9px; /* the source surface's floating radius */
+  --primary-hover:         #ffffff;
+  --control-border:        var(--sv-c10);
+  --control-border-strong: var(--sv-c40);
+  --switch-track:          var(--sv-c10);
+  --switch-track-on:       var(--sv-c40);
+  --chip-active:           rgba(255, 255, 255, 0.12);
+  --success-glow-core:     color-mix(in srgb, var(--success) 95%, transparent);
+  --success-glow-halo:     color-mix(in srgb, var(--success) 60%, transparent);
+}
+
+/* Light mode: warm paper surfaces, an ink-alpha ramp instead of white-alpha,
+   quieter accent and link, status foregrounds mixed toward black. The base
+   color (and so the status mixes that reference it) is shared with dark —
+   only surfaces, ramp, foregrounds, and the per-mode values change. */
+:root:not([data-family])[data-mode="light"],
+[data-family="savanna"][data-mode="light"] {
+  color-scheme: light;
+
+  --sv-bg:   hsla(var(--sv-hue), 10%, 98%, 0.99);
+  --sv-desk: hsla(var(--sv-hue), 10%, 83%, 0.99);
+
+  --sv-c5:  hsla(var(--sv-hue), 30%, 10%, 0.05);
+  --sv-c10: hsla(var(--sv-hue), 30%, 10%, 0.1);
+  --sv-c20: hsla(var(--sv-hue), 30%, 10%, 0.2);
+  --sv-c40: hsla(var(--sv-hue), 30%, 10%, 0.4);
+  --sv-c60: hsla(var(--sv-hue), 30%, 10%, 0.6);
+  --sv-c80: hsla(var(--sv-hue), 30%, 10%, 0.8);
+
+  --sv-accent: hsla(calc(var(--sv-hue) - 14), 62%, 60%, 0.99);
+  --sv-link:   hsla(calc(var(--sv-hue) + 175), 42%, 42%, 0.99);
+  --sv-shadow: 0.14;
+
+  --card:         #fff;
+  --popover:      #fff;
+  --code-surface: hsla(var(--sv-hue), 10%, 94%, 0.99);
+
+  --fill-subtle: hsla(var(--sv-hue), 30%, 10%, 0.03);
+  --hover:       hsla(var(--sv-hue), 30%, 10%, 0.04);
+  --active:      hsla(var(--sv-hue), 30%, 10%, 0.08);
+  --border-hairline: hsla(var(--sv-hue), 30%, 10%, 0.07);
+
+  --foreground:        oklch(from var(--sv-base) 0.333 0.005 h);
+  --foreground-body:   oklch(from var(--sv-base) 0.4 0.01 h);
+  --secondary-fg:      oklch(from var(--sv-base) 0.5 0.025 h);
+  --muted-foreground:  oklch(from var(--sv-base) 0.62 0.02 h);
+  --muted-foreground-2:oklch(from var(--sv-base) 0.66 0.02 h);
+  --faint:             oklch(from var(--sv-base) 0.72 0.015 h);
+  --faintest:          oklch(from var(--sv-base) 0.78 0.012 h);
+  --mono-meta:         oklch(from var(--sv-base) 0.62 0.02 h);
+
+  --success-foreground:     color-mix(in lch, var(--success) 70%, black);
+  --success-surface:        color-mix(in lch, var(--sv-base) 8%, hsl(90, 55%, 88%) 90%);
+  --warning-foreground:     color-mix(in lch, var(--warning) 80%, black);
+  --warning-surface:        color-mix(in lch, var(--sv-base) 8%, hsl(38, 88%, 88%) 90%);
+  --destructive-foreground: color-mix(in lch, var(--destructive) 78%, black);
+  --destructive-surface:    color-mix(in lch, var(--sv-base) 8%, hsl(11, 72%, 90%) 90%);
+  --info: hsla(212, 55%, 40%, 0.99);
+
+  /* ---- Syntax on paper: the dark hues' lightness would wash out on the
+     code surface, so each drops the way the link does. --code-string
+     rides --success-soft. ---- */
+  --success-soft:  color-mix(in lch, var(--success) 85%, black);
+  --code-keyword:  hsla(calc(var(--sv-hue) + 185), 35%, 40%, 0.99);
+  --code-ambient:  hsla(calc(var(--sv-hue) + 10), 40%, 36%, 0.99);
+
+  /* ---- Identity accent on paper: the same lift, the other way ---- */
+  --accent-identity: #4a34a8;
+
+  --focus-ring: hsla(var(--sv-hue), 30%, 10%, 0.4);
+  --overlay:    rgba(40, 32, 26, 0.35);
+
+  --primary-hover: hsla(var(--sv-hue), 30%, 8%, 0.95);
+  --chip-active:   hsla(var(--sv-hue), 30%, 10%, 0.12);
+}
+
+/* The family's selection color, scoped (theme-authoring rules allow exactly
+   this one rule beyond token assignments). */
+:root:not([data-family]) ::selection,
+[data-family="savanna"] ::selection,
+[data-family="savanna"]::selection {
+  background: var(--selection);
+}

@@ -1,0 +1,1326 @@
+/* Shelf's stylesheet (mesa/specs/charter.md §6.7).
+ *
+ * Carried from the design of record's shelf.css (root
+ * specs/product_surface_designs/shelf/source/), with the canvas-only
+ * parts taken out and the markdown pages' own styles added at the end.
+ * Every value is a token from mantle's savanna family, which the pages
+ * load first (savanna.css, its light block by the reader's setting in
+ * savanna-light.css, the faces in fonts-savanna.css): a change to the
+ * family reaches the shelf at its next build. Dark is the default
+ * identity. Two local names carry the changelog site's light-mode
+ * departure: metadata and eyebrows read --secondary-fg on paper,
+ * because the family's muted value falls to about 3:1 at 11–13px.
+ * Nothing here needs a script, and nothing on a page is styled inline:
+ * the pages' content-security policy drops an inline style. */
+
+.shelf {
+  --meta: var(--muted-foreground);
+  --eyebrow: var(--mono-meta);
+  --gutter: 32px;
+  --site: 1280px;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground-body);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  container-type: inline-size;
+}
+@media (prefers-color-scheme: light) {
+  .shelf {
+    --meta: var(--secondary-fg);
+    --eyebrow: var(--secondary-fg);
+  }
+}
+.shelf *,
+.shelf *::before,
+.shelf *::after {
+  box-sizing: border-box;
+}
+.shelf a {
+  color: var(--link);
+  text-decoration: none;
+}
+.shelf a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.shelf :focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-chip);
+}
+.shelf ::selection {
+  background: var(--selection);
+}
+/* A zero-specificity reset, so .lede, .prose and the blocks' own
+ * spacing still win. */
+:where(.shelf) p {
+  margin: 0;
+}
+.shelf code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  color: var(--secondary-fg);
+  background: var(--fill);
+  border: 1px solid var(--border-hairline);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+/* ── The masthead (shared with the changelog) ── */
+.top {
+  position: relative;
+  z-index: 2;
+  background: var(--background);
+  border-bottom: 1px solid var(--border-hairline);
+}
+.top-in {
+  max-width: var(--site);
+  height: 56px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  white-space: nowrap;
+}
+.shelf .brand a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--foreground);
+  font-weight: 600;
+}
+.brand img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.brand-sep {
+  color: var(--faintest);
+}
+.shelf .brand .brand-site {
+  color: var(--meta);
+  font-weight: 400;
+}
+.nav {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.shelf .nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 11px;
+  border-radius: var(--radius-control);
+  color: var(--secondary-fg);
+  font-size: 14px;
+  white-space: nowrap;
+}
+.shelf .nav a:hover {
+  background: var(--hover);
+  color: var(--foreground);
+  text-decoration: none;
+}
+.shelf .nav a[aria-current="page"] {
+  background: var(--fill);
+  color: var(--foreground);
+}
+.nav-rule {
+  width: 1px;
+  height: 18px;
+  margin: 0 8px;
+  background: var(--border);
+}
+.out {
+  color: var(--faint);
+  font-size: 12px;
+}
+.menu {
+  display: none;
+  margin-left: auto;
+}
+.menu > summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--secondary-fg);
+  font-size: 14px;
+  cursor: pointer;
+}
+.menu > summary::-webkit-details-marker {
+  display: none;
+}
+.menu[open] > summary {
+  background: var(--fill);
+  color: var(--foreground);
+}
+.menu-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 57px;
+  padding: 4px var(--gutter) 20px;
+  background: var(--popover);
+  border-bottom: 1px solid var(--border-hairline);
+  box-shadow: var(--shadow-popup);
+  display: flex;
+  flex-direction: column;
+}
+.shelf .menu-panel a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  border-bottom: 1px solid var(--border-hairline);
+  color: var(--foreground);
+  font-size: 16px;
+}
+.shelf .menu-panel a[aria-current="page"] {
+  font-weight: 600;
+}
+.menu-panel .menu-group {
+  margin-top: 18px;
+}
+
+/* ── Page columns ── */
+.page {
+  max-width: calc(var(--measure-narrow) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0 var(--gutter) 112px;
+}
+.head {
+  padding: 72px 0 8px;
+}
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+}
+.display {
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(32px, 6cqi, 46px);
+  line-height: 1.12;
+  color: var(--foreground);
+  text-wrap: balance;
+}
+.lede {
+  margin-top: 16px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--meta);
+  max-width: 62ch;
+}
+.block {
+  margin-top: 64px;
+}
+.block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.h3 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.prose > * + * {
+  margin-top: 16px;
+}
+.prose {
+  max-width: var(--measure-prose);
+}
+.meta {
+  color: var(--meta);
+  font-size: 14px;
+}
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Rows: the pointer to a thing ── */
+.rows {
+  background: var(--card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.shelf .row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  border-top: 1px solid var(--border-hairline);
+  color: inherit;
+}
+.shelf .row:first-child {
+  border-top: 0;
+}
+.shelf .row:hover {
+  background: var(--hover);
+  text-decoration: none;
+}
+.row-title {
+  display: block;
+  color: var(--foreground);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.row-text {
+  display: block;
+  margin-top: 3px;
+  color: var(--meta);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.row-side {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--faint);
+  white-space: nowrap;
+}
+.go {
+  color: var(--faint);
+  font-family: var(--font-sans);
+  font-size: 16px;
+}
+.row.way {
+  padding: 22px 22px;
+  align-items: start;
+}
+.row.way .eyebrow {
+  margin-bottom: 8px;
+}
+.row.way .row-title {
+  font-size: 19px;
+}
+.row.way .row-side {
+  padding-top: 26px;
+}
+
+/* ── Tiles: the sections on the front page ── */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.shelf .tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  color: inherit;
+}
+.shelf .tile:hover {
+  background: var(--hover);
+  text-decoration: none;
+}
+.tile-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--foreground);
+  font-weight: 600;
+  font-size: 15.5px;
+}
+.tile-text {
+  color: var(--meta);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Steps ── */
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.step {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 12px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-hairline);
+}
+.step:last-child {
+  border-bottom: 1px solid var(--border-hairline);
+}
+.step-n {
+  padding-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+.step-body > * + * {
+  margin-top: 10px;
+}
+
+/* ── Code ── */
+.code {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  background: var(--code-surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-control);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--code-plain);
+  white-space: pre;
+}
+.code .c {
+  color: var(--code-comment);
+}
+.code .p {
+  color: var(--faintest);
+  user-select: none;
+}
+
+/* ── Notes: round = information, square = warning ── */
+.note {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-control);
+  background: var(--fill);
+  border: 1px solid var(--border-hairline);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.note-shape {
+  width: 8px;
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 50%;
+  background: var(--info);
+}
+.note strong {
+  color: var(--foreground);
+}
+.note.warn {
+  background: var(--warning-surface);
+  border-color: transparent;
+  color: var(--warning-foreground);
+}
+.note.warn .note-shape {
+  border-radius: 2px;
+  background: var(--warning);
+}
+.note.warn strong {
+  color: inherit;
+}
+
+/* ── Tables ── */
+.table-box {
+  overflow-x: auto;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.table th {
+  padding: 11px 14px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.table td {
+  padding: 12px 14px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border-hairline);
+}
+.table tr:last-child td {
+  border-bottom: 0;
+}
+.table td:first-child {
+  color: var(--foreground);
+}
+
+/* ── Tags and buttons ── */
+.tag {
+  display: inline-block;
+  padding: 0 7px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-chip);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--meta);
+  white-space: nowrap;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.shelf .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: var(--radius-control);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 15px;
+  font-weight: 600;
+  border: 0;
+}
+.shelf .btn:hover {
+  background: var(--primary-hover);
+  text-decoration: none;
+}
+.shelf .btn.quiet {
+  background: transparent;
+  color: var(--secondary-fg);
+  border: 1px solid var(--border-strong);
+}
+.shelf .btn.quiet:hover {
+  background: var(--hover);
+}
+.seg {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--fill-subtle);
+}
+.seg button {
+  height: 34px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--secondary-fg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  cursor: pointer;
+}
+.seg button[aria-pressed="true"] {
+  background: var(--chip-active);
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+/* ── Cards: a download, a statement, a book ── */
+.card {
+  padding: 22px;
+  background: var(--card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+}
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.facts {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 8px 16px;
+  font-size: 14.5px;
+}
+.facts dt {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--eyebrow);
+  padding-top: 2px;
+}
+.facts dd {
+  margin: 0;
+}
+
+/* ── Previous / next ── */
+.pn {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 64px;
+}
+.shelf .pn a {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  color: var(--foreground);
+  font-weight: 600;
+}
+.shelf .pn a:hover {
+  background: var(--hover);
+  text-decoration: none;
+}
+.shelf .pn a.next {
+  text-align: right;
+}
+
+/* ── Docs: chapters · article · on this page ── */
+.docs {
+  max-width: var(--site);
+  margin: 0 auto;
+  padding: 48px var(--gutter) 112px;
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr) 196px;
+  gap: 56px;
+}
+.chapters-side .eyebrow {
+  margin: 0 0 10px 10px;
+}
+.toc {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.shelf .toc a {
+  padding: 6px 10px;
+  border-radius: var(--radius-control);
+  color: var(--secondary-fg);
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+.shelf .toc a:hover {
+  background: var(--hover);
+  color: var(--foreground);
+  text-decoration: none;
+}
+.shelf .toc a[aria-current="page"] {
+  background: var(--fill);
+  color: var(--foreground);
+  font-weight: 600;
+}
+.toc-books {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-hairline);
+}
+.article {
+  min-width: 0;
+  max-width: var(--measure-prose);
+}
+.article .head {
+  padding-top: 24px;
+}
+.article .h2 {
+  margin-top: 48px;
+  padding-top: 8px;
+}
+.onpage {
+  font-size: 13.5px;
+}
+.onpage .eyebrow {
+  margin-bottom: 10px;
+}
+.shelf .onpage a {
+  display: block;
+  padding: 4px 0;
+  color: var(--meta);
+}
+.chapters-m {
+  display: none;
+  margin-top: 8px;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+}
+.chapters-m > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 0 16px;
+  color: var(--foreground);
+  font-size: 15px;
+  cursor: pointer;
+}
+.chapters-m > summary::-webkit-details-marker {
+  display: none;
+}
+.chapters-m .toc {
+  padding: 0 6px 10px;
+}
+/* The docs' first page: a card per book. */
+.book-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.book-title {
+  margin-top: 8px;
+  font-size: 19px;
+}
+.shelf .book-title a {
+  color: var(--foreground);
+}
+.book-summary {
+  margin-top: 4px;
+}
+.book-toc {
+  margin: 0 -10px;
+}
+.book-count {
+  margin-top: auto;
+  font-size: 12px;
+  color: var(--faint);
+}
+/* A book's contents: no "on this page" column, so the contents take
+ * its place at the narrow measure. */
+.book-main {
+  grid-column: 2 / 4;
+  max-width: var(--measure-narrow);
+}
+.chapter {
+  margin-top: 44px;
+}
+.chapter .block-head .eyebrow {
+  margin: 0;
+}
+/* Outranks `.chapters-side .eyebrow`, the book's own label. */
+.chapters-side .toc-group {
+  margin: 14px 0 6px 10px;
+  font-size: 10.5px;
+}
+.chapters-side > .eyebrow a {
+  color: inherit;
+}
+.article .page-eyebrow {
+  padding-top: 24px;
+}
+
+/* ── The plugin directory: search, purposes, a grid, pages ──
+ * A card grid is structure, so the page takes the site's width;
+ * its header keeps the narrow measure. */
+.page.wide {
+  max-width: calc(var(--site));
+}
+.page.wide .head {
+  max-width: var(--measure-narrow);
+}
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.search {
+  position: relative;
+  flex: 1 1 320px;
+  max-width: 440px;
+}
+.search svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--faint);
+  pointer-events: none;
+}
+.search input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px 0 36px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-control);
+  background: var(--fill-subtle);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 15px;
+}
+.search input::placeholder {
+  color: var(--faint);
+}
+.search input:focus {
+  outline: none;
+  border-color: var(--ring);
+}
+.sort {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--meta);
+}
+.sort select {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-control);
+  background: var(--fill-subtle);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 14px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--secondary-fg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  cursor: pointer;
+}
+.chip:hover {
+  background: var(--hover);
+}
+.chip[aria-pressed="true"] {
+  background: var(--chip-active);
+  border-color: var(--border-strong);
+  color: var(--foreground);
+  font-weight: 600;
+}
+.chip-n {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--faint);
+}
+.results {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--meta);
+}
+.plugin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.shelf .plugin-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 212px;
+  padding: 18px;
+  background: var(--card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  color: inherit;
+}
+.shelf .plugin-card:hover {
+  border-color: var(--border-strong);
+  text-decoration: none;
+}
+.plugin-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.plugin-mark {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-control);
+  background: var(--fill);
+  font-family: var(--font-display);
+  font-size: 19px;
+  color: var(--secondary-fg);
+}
+.plugin-name {
+  display: block;
+  color: var(--foreground);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.plugin-by {
+  display: block;
+  font-size: 13px;
+  color: var(--meta);
+}
+.plugin-text {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--foreground-body);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.plugin-foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 32px;
+}
+.pager button {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--secondary-fg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  cursor: pointer;
+}
+.pager button:hover {
+  background: var(--hover);
+}
+.pager button[aria-current="page"] {
+  background: var(--fill);
+  color: var(--foreground);
+  font-weight: 600;
+}
+.pager button:disabled {
+  color: var(--faintest);
+  cursor: default;
+  background: transparent;
+}
+.empty {
+  padding: 56px 20px;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-card);
+  color: var(--meta);
+}
+
+/* ── Footer ── */
+.foot {
+  border-top: 1px solid var(--border-hairline);
+}
+.foot-in {
+  max-width: var(--site);
+  margin: 0 auto;
+  padding: 36px var(--gutter) 48px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  font-size: 14px;
+  color: var(--meta);
+}
+.foot .eyebrow {
+  margin-bottom: 10px;
+}
+.shelf .foot a {
+  display: block;
+  padding: 3px 0;
+  color: var(--secondary-fg);
+}
+.foot-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Narrow ── */
+@container (max-width: 1000px) {
+  .plugin-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@container (max-width: 1100px) {
+  .docs {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 40px;
+  }
+  .book-main {
+    grid-column: 2;
+  }
+  .onpage {
+    display: none;
+  }
+}
+@container (max-width: 900px) {
+  .top-in,
+  .menu-panel,
+  .page,
+  .docs,
+  .foot-in {
+    --gutter: 20px;
+  }
+  .nav {
+    display: none;
+  }
+  .menu {
+    display: block;
+  }
+  .docs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding-top: 16px;
+  }
+  .chapters-side {
+    display: none;
+  }
+  .book-main {
+    grid-column: 1;
+  }
+  .chapters-m {
+    display: block;
+  }
+  .foot-in {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .foot-brand {
+    grid-column: 1 / -1;
+  }
+}
+@container (max-width: 640px) {
+  .top-in,
+  .menu-panel,
+  .page,
+  .docs,
+  .foot-in {
+    --gutter: 16px;
+  }
+  .head {
+    padding-top: 44px;
+  }
+  .block {
+    margin-top: 48px;
+  }
+  .tiles,
+  .grid2,
+  .pn,
+  .plugin-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sort {
+    margin-left: 0;
+  }
+  .search {
+    max-width: none;
+  }
+  .shelf .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .row.way .row-side {
+    padding-top: 0;
+  }
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .facts dd {
+    margin-bottom: 10px;
+  }
+  .step {
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+  .brand-sep,
+  .shelf .brand .brand-site {
+    display: none;
+  }
+}
+
+/* The page is the body. */
+body.shelf {
+  margin: 0;
+}
+
+/* ── The markdown pages ──
+ * What markdown writes, in the design's voice: the page's eyebrow
+ * above its first heading, that heading as the display title and the
+ * paragraph after it as the lede; sections, lists, code, tables and
+ * the `:::` notes as the design draws them. */
+.page-eyebrow {
+  margin: 0;
+  padding-top: 72px;
+}
+.page-eyebrow a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+}
+.prose {
+  max-width: var(--measure-prose);
+}
+.prose > * + * {
+  margin-top: 16px;
+}
+.prose > h1:first-child {
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(32px, 6cqi, 46px);
+  line-height: 1.12;
+  color: var(--foreground);
+  text-wrap: balance;
+}
+.prose > h1:first-child + p {
+  margin-top: 16px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--meta);
+}
+.prose h2 {
+  margin: 56px 0 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--border-hairline);
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--foreground);
+  scroll-margin-top: 24px;
+}
+.prose h3 {
+  margin: 32px 0 0;
+  font-size: 17px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--foreground);
+  scroll-margin-top: 24px;
+}
+.prose h4 {
+  margin: 24px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.prose strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+/* Zero specificity, so `.prose > * + *` still spaces a list from the
+ * paragraph before it. */
+:where(.prose) ul,
+:where(.prose) ol {
+  margin: 0;
+  padding-left: 22px;
+}
+.prose li + li {
+  margin-top: 6px;
+}
+.prose li > ul,
+.prose li > ol {
+  margin-top: 6px;
+}
+/* An ordered list is a run of steps: mono numerals in the margin. */
+.prose > ol {
+  list-style: none;
+  padding-left: 0;
+  counter-reset: step;
+}
+.prose > ol > li {
+  position: relative;
+  padding-left: 40px;
+  counter-increment: step;
+}
+.prose > ol > li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+.prose pre {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  background: var(--code-surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-control);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.prose pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: inherit;
+  color: var(--code-plain);
+}
+.shelf code.unbroken {
+  white-space: nowrap;
+}
+.prose .table-box {
+  margin-top: 16px;
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.prose th {
+  padding: 11px 14px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.prose td {
+  padding: 12px 14px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border-hairline);
+}
+.prose tr:last-child td {
+  border-bottom: 0;
+}
+.prose blockquote {
+  margin: 16px 0 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--border);
+  color: var(--meta);
+}
+.note-body > * + * {
+  margin-top: 10px;
+}
+.hub .block:first-of-type {
+  margin-top: 48px;
+}
+/* What a page says after its generated blocks. */
+.hub .block + .prose {
+  margin-top: 48px;
+}
+
+/* ── The preview (pnpm run shelf:preview) ──
+ * Never in a live build: a hidden page, section or passage is marked
+ * with the draft shape, a hollow dot. */
+.preview-ribbon {
+  margin: 0;
+  padding: 8px var(--gutter);
+  background: var(--fill);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--secondary-fg);
+  text-align: center;
+}
+.preview-banner,
+.passage-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--secondary-fg);
+}
+.preview-banner::before,
+.passage-label::before,
+.shelf .is-hidden::after {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--dot-hollow-border);
+  border-radius: 50%;
+}
+.shelf .is-hidden::after {
+  display: inline-block;
+  margin-left: 6px;
+}
+/* A row and a tile are grids: the mark sits in the corner. */
+.shelf .row.is-hidden,
+.shelf .tile.is-hidden,
+.shelf .card.is-hidden {
+  position: relative;
+}
+.shelf .row.is-hidden::after,
+.shelf .tile.is-hidden::after,
+.shelf .card.is-hidden::after {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  margin: 0;
+}
+.passage {
+  margin-top: 16px;
+  padding: 4px 16px 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-control);
+}
+.passage > .passage-label {
+  margin-top: 8px;
+}
+/* In the preview a lede can stand in passages: the live lede and the
+ * one waiting for its feature. */
+.prose > h1:first-child + .passage > p:not(.passage-label),
+.prose > h1:first-child + .passage + .passage > p:not(.passage-label) {
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--meta);
+}

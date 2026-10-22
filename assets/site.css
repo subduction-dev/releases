@@ -1,132 +1,18 @@
-/* The public changelog's one stylesheet.
+/* The public changelog's own stylesheet: its list and its entries.
  *
  * The design of record is vaalbara's root
- * specs/product_surface_designs/ (Changelog Mockup, Changelog
- * Boards), drawn on the savanna family. This page cannot import the
- * app's stylesheet, so the family tokens it uses are copied here from
- * mantle/packages/ui/src/theme/families/savanna.css — that file is
- * the authority; re-copy rather than hand-tune. Dark is the family's
- * default identity; light follows prefers-color-scheme. */
+ * specs/product_surface_designs/ (Changelog Mockup, Changelog Boards),
+ * under the shelf's masthead and footer since root roadmap 32.3b
+ * (specs/product_surface_designs/shelf/, the record's R6). Every value
+ * is a token: the page loads the savanna family's own sheets, the light
+ * sheet derived from them and Shelf's stylesheet first (all generated
+ * into this seed by vaalbara's `pnpm run shelf:changelog`), so a family
+ * change reaches the changelog at the next `--update-site` and nothing
+ * here copies a token. `.shelf a` colours every link the family's link
+ * colour, so the list's own links say `.shelf` to keep theirs. */
 
-@font-face {
-  font-family: "Coustard";
-  font-style: normal;
-  font-weight: 400 900;
-  font-display: swap;
-  src: url("fonts/coustard-latin-400.woff2") format("woff2");
-}
-@font-face {
-  font-family: "IBM Plex Sans";
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url("fonts/ibm-plex-sans-latin-400-700.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Sono";
-  font-style: normal;
-  font-weight: 400 600;
-  font-display: swap;
-  src: url("fonts/sono-latin-400-600.woff2") format("woff2");
-}
-
-/* ── savanna, dark (the family default) ── */
-:root {
-  color-scheme: dark;
-  --sv-hue: 30;
-  --sv-s: 38%;
-  --sv-l: 10%;
-  --sv-base: hsla(var(--sv-hue), var(--sv-s), var(--sv-l), 0.99);
-  --sv-bg: hsla(var(--sv-hue), 14%, 5.5%, 0.99);
-  --sv-c5: rgba(255, 255, 255, 0.05);
-  --sv-c10: rgba(255, 255, 255, 0.1);
-  --sv-link: hsla(calc(var(--sv-hue) + 175), 50%, 64%, 0.99);
-  --sv-shadow: 0.55;
-
-  --background: var(--sv-bg);
-  --card: var(--sv-c5);
-  --hover: rgba(255, 255, 255, 0.04);
-  --border-hairline: rgba(255, 255, 255, 0.07);
-  --border: var(--sv-c10);
-  --foreground: oklch(from var(--sv-base) 0.97 0.005 h);
-  --foreground-body: oklch(from var(--sv-base) 0.92 0.008 h);
-  --secondary-fg: oklch(from var(--sv-base) 0.88 0.01 h);
-  --muted-foreground: oklch(from var(--sv-base) 0.75 0.015 h);
-  --faint: oklch(from var(--sv-base) 0.58 0.012 h);
-  --mono-meta: oklch(from var(--sv-base) 0.65 0.015 h);
-  --link: var(--sv-link);
-  --shadow-card: 0 5px 16px -9px rgba(0, 0, 0, var(--sv-shadow));
-  --focus-ring: rgba(255, 255, 255, 0.4);
-  --selection: hsla(8, 50%, 70%, 0.35);
-
-  /* The design's two local names. Dark keeps the family's values. */
-  --meta: var(--muted-foreground);
-  --eyebrow: var(--mono-meta);
-
-  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
-  --font-display: "Coustard", Georgia, serif;
-  --font-mono: "Sono", ui-monospace, monospace;
-  --radius-chip: 5px;
-  --radius: 7px;
-  --radius-card: 11px;
-  --measure-narrow: 720px;
-  --measure-prose: 72ch;
-}
-
-/* ── savanna-light ── */
-@media (prefers-color-scheme: light) {
-  :root {
-    color-scheme: light;
-    --sv-bg: hsla(var(--sv-hue), 10%, 98%, 0.99);
-    --sv-c5: hsla(var(--sv-hue), 30%, 10%, 0.05);
-    --sv-c10: hsla(var(--sv-hue), 30%, 10%, 0.1);
-    --sv-link: hsla(calc(var(--sv-hue) + 175), 42%, 42%, 0.99);
-    --sv-shadow: 0.14;
-
-    --card: #fff;
-    --hover: hsla(var(--sv-hue), 30%, 10%, 0.04);
-    --border-hairline: hsla(var(--sv-hue), 30%, 10%, 0.07);
-    --foreground: oklch(from var(--sv-base) 0.333 0.005 h);
-    --foreground-body: oklch(from var(--sv-base) 0.4 0.01 h);
-    --secondary-fg: oklch(from var(--sv-base) 0.5 0.025 h);
-    --muted-foreground: oklch(from var(--sv-base) 0.62 0.02 h);
-    --faint: oklch(from var(--sv-base) 0.72 0.015 h);
-    --mono-meta: oklch(from var(--sv-base) 0.62 0.02 h);
-    --focus-ring: hsla(var(--sv-hue), 30%, 10%, 0.4);
-
-    /* Darker than the family's meta on paper: the family values fall
-       to about 3:1 at 11–13px (the design's hand-off). */
-    --meta: var(--secondary-fg);
-    --eyebrow: var(--secondary-fg);
-  }
-}
-
-/* ── base ── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
 html {
   background: var(--background);
-}
-body {
-  margin: 0;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-}
-::selection {
-  background: var(--selection);
-}
-a {
-  color: inherit;
-}
-:focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
-  border-radius: var(--radius-chip);
 }
 
 .column {
@@ -134,52 +20,6 @@ a {
   max-width: calc(var(--measure-narrow) + 32px);
   margin: 0 auto;
   padding: 0 16px;
-}
-
-/* ── the top bar ── */
-.topbar {
-  background: var(--background);
-  border-bottom: 1px solid var(--border-hairline);
-}
-.topbar .column {
-  height: 56px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.topbar img {
-  display: block;
-}
-.brand {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--foreground);
-  text-decoration: none;
-}
-.crumb-sep {
-  color: var(--faint);
-  font-size: 15px;
-}
-.crumb {
-  font-size: 15px;
-  color: var(--meta);
-  text-decoration: none;
-}
-.crumb:hover {
-  color: var(--foreground);
-}
-
-/* ── shared voices ── */
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--eyebrow);
-}
-.mono {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
 }
 
 /* ── the masthead ── */
@@ -236,14 +76,14 @@ a {
   column-gap: 14px;
   row-gap: 6px;
 }
-.entry-version {
+.shelf .entry-version {
   flex: 0 0 100%;
   font-size: 17px;
   font-weight: 600;
   color: var(--foreground);
   text-decoration: none;
 }
-.entry-version:hover {
+.shelf .entry-version:hover {
   text-decoration: underline;
 }
 .entry-date {
@@ -371,12 +211,12 @@ a {
   padding-top: 40px;
   padding-bottom: 96px;
 }
-.back {
+.shelf .back {
   font-size: 12.5px;
   color: var(--link);
   text-decoration: none;
 }
-.back:hover {
+.shelf .back:hover {
   text-decoration: underline;
 }
 .entry-page > .eyebrow {
@@ -427,17 +267,19 @@ a {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px;
 }
-.neighbour {
+.shelf .neighbour {
   display: flex;
   flex-direction: column;
   gap: 4px;
   padding: 16px 18px;
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
+  color: inherit;
   text-decoration: none;
 }
-.neighbour:hover {
+.shelf .neighbour:hover {
   background: var(--hover);
+  text-decoration: none;
 }
 .neighbour.newer {
   align-items: flex-end;
