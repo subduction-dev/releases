@@ -955,6 +955,47 @@
   border-radius: var(--radius-card);
   color: var(--meta);
 }
+.empty-title {
+  color: var(--foreground);
+  font-weight: 600;
+}
+.empty-hint {
+  margin-top: 6px;
+}
+.empty-act {
+  margin-top: 16px;
+}
+/* The build's classes for what the design wrote inline, which the
+ * shelf's policy would drop. */
+.directory-controls {
+  margin-top: 48px;
+}
+.directory-list {
+  margin-top: 16px;
+}
+.plugin-version {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--faint);
+}
+.shelf a.tag {
+  color: var(--meta);
+}
+.shelf a.tag:hover {
+  border-color: var(--border-strong);
+  color: var(--foreground);
+  text-decoration: none;
+}
+/* What the directory's own page says after its cards sits a block
+ * below them. */
+.directory-list + .prose {
+  margin-top: 64px;
+}
+/* What the directory's script hides stays hidden whatever the class
+ * would display it as. */
+.shelf [hidden] {
+  display: none !important;
+}
 
 /* ── Footer ── */
 .foot {
