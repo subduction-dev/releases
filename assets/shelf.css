@@ -1019,6 +1019,13 @@
   padding: 3px 0;
   color: var(--secondary-fg);
 }
+/* The brand is the masthead's: the mark and the name on one line, which
+ * the column links' block display above would otherwise break. */
+.shelf .foot .brand a {
+  display: flex;
+  padding: 0;
+  color: var(--foreground);
+}
 .foot-brand {
   display: flex;
   flex-direction: column;
