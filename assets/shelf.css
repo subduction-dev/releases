@@ -1,23 +1,27 @@
-/* Shelf's stylesheet (mesa/specs/charter.md §6.7).
+/* The page kit's stylesheet, scoped under the body class `shelf`.
  *
- * Carried from the design of record's shelf.css (root
+ * Carried from its design of record (root
  * specs/product_surface_designs/shelf/source/), with the canvas-only
  * parts taken out and the markdown pages' own styles added at the end.
  * Every value is a token from mantle's savanna family, which the pages
  * load first (savanna.css, its light block by the reader's setting in
  * savanna-light.css, the faces in fonts-savanna.css): a change to the
- * family reaches the shelf at its next build. Dark is the default
- * identity. Two local names carry the changelog site's light-mode
- * departure: metadata and eyebrows read --secondary-fg on paper,
- * because the family's muted value falls to about 3:1 at 11–13px.
- * Nothing here needs a script, and nothing on a page is styled inline:
- * the pages' content-security policy drops an inline style. */
+ * family reaches a site at its next build. Dark is the default
+ * identity. Two local names carry the light-mode departure: metadata
+ * and eyebrows read --secondary-fg on paper, because the family's
+ * muted value falls to about 3:1 at 11–13px. Nothing here needs a
+ * script, and nothing on a page is styled inline: the pages'
+ * content-security policy drops an inline style. */
 
 .shelf {
   --meta: var(--muted-foreground);
   --eyebrow: var(--mono-meta);
   --gutter: 32px;
   --site: 1280px;
+  /* A working column in the site-width frame: a form, a conversation.
+   * Wider than the reading measure, so a field has room to be typed
+   * in, narrower than the site, so a line of it stays readable. */
+  --page-column: 880px;
   min-height: 100vh;
   background: var(--background);
   color: var(--foreground-body);
@@ -515,9 +519,12 @@
   border-radius: var(--radius-control);
   background: var(--primary);
   color: var(--primary-foreground);
+  font-family: inherit;
   font-size: 15px;
   font-weight: 600;
+  line-height: 1;
   border: 0;
+  cursor: pointer;
 }
 .shelf .btn:hover {
   background: var(--primary-hover);
@@ -966,7 +973,7 @@
   margin-top: 16px;
 }
 /* The build's classes for what the design wrote inline, which the
- * shelf's policy would drop. */
+ * pages' policy would drop. */
 .directory-controls {
   margin-top: 48px;
 }
@@ -1131,6 +1138,281 @@
   .brand-sep,
   .shelf .brand .brand-site {
     display: none;
+  }
+}
+
+/* ── A page with no eyebrow ──
+ * Its first block starts where an eyebrow would have, so a heading
+ * sits at the same height on every page. */
+.page-start {
+  padding-top: 72px;
+}
+.page-column {
+  max-width: var(--page-column);
+}
+
+/* ── Forms ──
+ * A form is a column of fields, then its actions. A field is its
+ * label, the help under the label, the control, and the error under
+ * the control; a short field (a choice, a code) takes half the column
+ * beside the next short one. Controls are 44px, the height of a
+ * button, at 16px so a phone does not zoom into them. */
+.form {
+  max-width: var(--page-column);
+  margin-top: 40px;
+}
+.form > .note {
+  margin-bottom: 28px;
+}
+.form-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 20px;
+}
+.field {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.field.short {
+  grid-column: auto;
+}
+.field-label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.field-optional {
+  color: var(--meta);
+  font-size: 13px;
+  font-weight: 400;
+}
+.field-help {
+  margin-top: 4px;
+  color: var(--meta);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.field > .control,
+.field > .select {
+  margin-top: 8px;
+}
+.field-error {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--destructive-foreground);
+  font-size: 14px;
+  line-height: 1.5;
+}
+/* The warning's shape, a square, in the error's colour. */
+.field-error::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--destructive);
+  transform: translateY(-1px);
+}
+.shelf .control {
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  padding: 0 14px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-control);
+  background: var(--card);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  transition: border-color 120ms ease;
+}
+.shelf .control::placeholder {
+  color: var(--faint);
+}
+.shelf .control:hover {
+  border-color: var(--ring);
+}
+.shelf .control:focus {
+  outline: none;
+  border-color: var(--ring);
+}
+.shelf .control:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-control);
+}
+.shelf .control[aria-invalid="true"] {
+  border-color: var(--destructive);
+}
+.shelf textarea.control {
+  height: auto;
+  min-height: 152px;
+  padding: 10px 14px;
+  resize: vertical;
+}
+.shelf .control.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.18em;
+}
+/* A choice: the platform's arrow replaced by the family's chevron,
+ * drawn with two borders so it takes the text's colour in either
+ * mode. */
+.select {
+  position: relative;
+  display: block;
+}
+.select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 17px;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--meta);
+  border-bottom: 1.5px solid var(--meta);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+.shelf .select > select.control {
+  appearance: none;
+  padding-right: 40px;
+  cursor: pointer;
+}
+.form-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-hairline);
+}
+.form-note {
+  flex: 1 1 260px;
+  color: var(--meta);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Stages: where a thing is on its way ──
+ * One segment a stage, the one it is at marked (`aria-current`), the
+ * ones behind it quieter than the ones ahead. */
+/* Zero specificity, so the spacing around a strip still wins. */
+:where(.shelf ol.strip) {
+  margin: 0;
+}
+.shelf ol.strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 6px;
+  padding: 0;
+  list-style: none;
+}
+.shelf ol.strip > li {
+  flex: 1 1 120px;
+  margin: 0;
+  padding: 10px 0 0;
+  border-top: 3px solid var(--border);
+  color: var(--meta);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.shelf ol.strip > li::before {
+  content: none;
+}
+.shelf ol.strip > li:has(~ li[aria-current="step"]) {
+  border-top-color: var(--faint);
+}
+.shelf ol.strip > li[aria-current="step"] {
+  border-top-color: var(--foreground);
+  color: var(--foreground);
+  font-weight: 600;
+}
+.shelf ol.strip small {
+  display: block;
+  margin-top: 4px;
+  color: var(--meta);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+.prose li > ol.strip {
+  margin-top: 12px;
+}
+/* What the stage it is at means, under the strip. */
+.strip + p {
+  margin-top: 16px;
+}
+/* A block's heading, then what it heads; the same inside a section of
+ * a page's prose. */
+.block > .h2 + *,
+.prose section > * + * {
+  margin-top: 16px;
+}
+
+/* ── A conversation ──
+ * Its messages oldest first, each one who wrote it and when, then
+ * what they wrote. */
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.thread > li {
+  padding: 18px 20px;
+  background: var(--card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  overflow-wrap: anywhere;
+}
+.thread > li > * + * {
+  margin-top: 10px;
+}
+.thread .meta strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+.thread p + p {
+  margin-top: 10px;
+}
+.thread dl {
+  margin: 0;
+}
+.thread dt {
+  margin-top: 14px;
+  color: var(--meta);
+  font-size: 13px;
+  font-weight: 600;
+}
+.thread dt:first-child {
+  margin-top: 0;
+}
+.thread dd {
+  margin: 2px 0 0;
+}
+
+@container (max-width: 640px) {
+  .page-start {
+    padding-top: 44px;
+  }
+  .field.short {
+    grid-column: 1 / -1;
+  }
+  .thread > li {
+    padding: 16px;
   }
 }
 
@@ -1304,7 +1586,7 @@ body.shelf {
   margin-top: 48px;
 }
 
-/* ── The preview (pnpm run shelf:preview) ──
+/* ── The preview ──
  * Never in a live build: a hidden page, section or passage is marked
  * with the draft shape, a hollow dot. */
 .preview-ribbon {

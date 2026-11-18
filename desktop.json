@@ -1,0 +1,19 @@
+---
+layout: null
+permalink: /desktop.json
+---
+{%- comment -%}
+  The desktop releases that shipped, newest first (root
+  specs/changelog.md §4): every entry whose targets name the desktop.
+  Subduction for desktop reads it to find the release an organization's
+  version calls for, and so does the window's Settings
+  (@subduction-dev/basin-local/desktop's DESKTOP_RELEASES_URL).
+{%- endcomment -%}
+{%- assign entries = site.pages | where_exp: "p", "p.dir == '/changelog/'" | sort: "order" | reverse -%}
+{%- assign releases = "" | split: "" -%}
+{%- for entry in entries -%}
+  {%- if entry.targets contains "desktop" -%}
+    {%- assign releases = releases | push: entry.version -%}
+  {%- endif -%}
+{%- endfor -%}
+{"schema":1,"releases":{{ releases | jsonify }}}

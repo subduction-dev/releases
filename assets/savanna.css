@@ -117,6 +117,19 @@
   --destructive-foreground: color-mix(in oklch, var(--destructive) 42%, white);
   --destructive-surface:    color-mix(in lch, var(--sv-base) 76%, var(--destructive) 46%);
 
+  /* ---- Categorical tints: six hues spread around the wheel from the
+     family's own, at one lightness and a modest chroma so none reads as
+     a status. Telling like things apart (a case's threads), never
+     meaning. The light block drops their lightness. ---- */
+  --sv-tint-s: 42%;
+  --sv-tint-l: 66%;
+  --tint-1: hsla(calc(var(--sv-hue) + 180), var(--sv-tint-s), var(--sv-tint-l), 0.99);
+  --tint-2: hsla(calc(var(--sv-hue) + 240), var(--sv-tint-s), var(--sv-tint-l), 0.99);
+  --tint-3: hsla(calc(var(--sv-hue) + 120), var(--sv-tint-s), var(--sv-tint-l), 0.99);
+  --tint-4: hsla(calc(var(--sv-hue) + 300), var(--sv-tint-s), var(--sv-tint-l), 0.99);
+  --tint-5: hsla(calc(var(--sv-hue) + 0), var(--sv-tint-s), var(--sv-tint-l), 0.99);
+  --tint-6: hsla(calc(var(--sv-hue) + 150), var(--sv-tint-s), var(--sv-tint-l), 0.99);
+
   /* ---- Syntax highlighting (low-chroma, harmonized to the hue) ---- */
   --code-plain:   var(--secondary-fg);
   --code-keyword: hsla(calc(var(--sv-hue) + 185), 35%, 68%, 0.99);
@@ -241,6 +254,9 @@
   --success-soft:  color-mix(in lch, var(--success) 85%, black);
   --code-keyword:  hsla(calc(var(--sv-hue) + 185), 35%, 40%, 0.99);
   --code-ambient:  hsla(calc(var(--sv-hue) + 10), 40%, 36%, 0.99);
+
+  /* ---- Tints on paper: the same hues, dropped to read on it ---- */
+  --sv-tint-l: 42%;
 
   /* ---- Identity accent on paper: the same lift, the other way ---- */
   --accent-identity: #4a34a8;
